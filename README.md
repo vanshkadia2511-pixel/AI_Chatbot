@@ -105,6 +105,15 @@ AI_Chatbot/
 ├── gemini_client.py     # Google GenAI SDK wrapper with error handling + fallback
 ├── quiz_manager.py      # MCQ quiz generator, score tracker, session state
 │
+├── frontend/            # 3D Three.js Competition UI
+│   ├── index.html       # Master 3D application interface
+│   ├── css/             # Modular design tokens, 3D, chat & responsive styles
+│   └── js/              # State hub, API layer, chat, quiz & 3D components
+│
+├── run_backend.bat      # One-click launcher for FastAPI backend (port 8000)
+├── run_3d_ui.bat        # One-click launcher for 3D UI (port 5173)
+├── run_streamlit.bat    # One-click launcher for Streamlit UI (port 8501)
+│
 ├── requirements.txt     # Python dependencies
 ├── .env                 # Your local API key (never committed)
 ├── .env.example         # Safe template — commit this

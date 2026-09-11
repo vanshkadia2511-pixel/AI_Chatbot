@@ -1,0 +1,141 @@
+/* ==========================================================================
+   Responsive Breakpoints & Mobile Optimization
+   ========================================================================== */
+
+/* Mobile Nav Bar (Hidden on Desktop) */
+.mobile-nav-bar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: rgba(10, 10, 20, 0.95);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border-glass);
+  z-index: var(--z-header);
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 var(--space-2);
+}
+
+.mobile-nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: var(--text-muted);
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  transition: all var(--trans-fast);
+}
+
+.mobile-nav-btn .mobile-nav-icon {
+  font-size: 1.1rem;
+}
+
+.mobile-nav-btn.active {
+  color: var(--color-primary-purple);
+}
+
+/* Large Screens & Desktop (> 1200px) */
+@media (min-width: 1200px) {
+  .left-panel {
+    width: 360px;
+  }
+  .right-panel {
+    width: 460px;
+  }
+}
+
+/* Tablets (768px - 1024px) */
+@media (max-width: 1024px) {
+  .left-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 320px;
+    z-index: var(--z-panels);
+    transform: translateX(-100%);
+    box-shadow: 8px 0 30px rgba(0, 0, 0, 0.6);
+  }
+
+  .left-panel.open {
+    transform: translateX(0);
+  }
+
+  .right-panel {
+    width: 380px;
+  }
+
+  .scene-controls-group {
+    right: 400px;
+  }
+}
+
+/* Mobile Screens (< 768px) */
+@media (max-width: 768px) {
+  .app-header {
+    padding: 0 var(--space-3);
+    height: 56px;
+    min-height: 56px;
+  }
+
+  .brand-tagline, .header-metric-pill.xp-pill, .header-metric-pill.streak-pill {
+    display: none;
+  }
+
+  .main-workspace {
+    height: calc(100vh - 56px - 56px); /* minus header & mobile nav */
+  }
+
+  .left-panel {
+    position: fixed;
+    top: 56px;
+    bottom: 56px;
+    left: 0;
+    width: 100%;
+    max-width: 320px;
+    transform: translateX(-100%);
+    z-index: var(--z-modal);
+  }
+
+  .left-panel.open {
+    transform: translateX(0);
+  }
+
+  .right-panel {
+    position: fixed;
+    top: 56px;
+    bottom: 56px;
+    right: 0;
+    width: 100%;
+    transform: translateX(100%);
+    z-index: var(--z-modal);
+    border-left: none;
+  }
+
+  .right-panel.open {
+    transform: translateX(0);
+  }
+
+  .mobile-nav-bar {
+    display: flex;
+  }
+
+  .scene-controls-group {
+    right: 16px;
+    top: 16px;
+  }
+
+  .viewport-hint-pill {
+    display: none;
+  }
+
+  .empty-state-prompts {
+    grid-template-columns: 1fr;
+  }
+}

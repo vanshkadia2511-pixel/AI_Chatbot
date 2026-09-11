@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyBuddy 📚 — Adaptive AI Tutor for SDG 4</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/chat.css">
+  <link rel="stylesheet" href="css/3d.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div id="app-container">
+    <!-- ====================================================================
+         Top Application Header
+         ==================================================================== -->
+    <header class="app-header">
+      <div class="brand-section">
+        <div class="brand-logo">📚</div>
+        <div class="brand-titles">
+          <div class="brand-title">
+            StudyBuddy
+            <span class="sdg-badge">SDG 4 Education</span>
+          </div>
+          <div class="brand-tagline">Adaptive AI Learning Tutor</div>
+        </div>
+      </div>
+
+      <div class="header-center-info">
+        <div class="header-metric-pill xp-pill" title="Total Experience Points">
+          <span class="metric-icon">⭐</span>
+          <span>XP:</span>
+          <span class="metric-value" id="header-xp-val">450</span>
+        </div>
+
+        <div class="header-metric-pill streak-pill" title="Current Daily Streak">
+          <span class="metric-icon">🔥</span>
+          <span>Streak:</span>
+          <span class="metric-value" id="header-streak-val">5</span>
+        </div>
+
+        <div class="header-metric-pill" title="Curriculum Mastery Progress">
+          <span class="metric-icon">📈</span>
+          <span>Mastery:</span>
+          <span class="metric-value" id="header-progress-val">78%</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn-demo-launcher" id="btn-judge-demo" title="Run 30-second automated demo for competition judges">
+          ⚡ 30s Judge Demo
+        </button>
+        <button class="btn-icon" id="btn-toggle-sound" title="Toggle Sound Feedback">
+          🔊
+        </button>
+      </div>
+    </header>
+
+    <!-- ====================================================================
+         Main Workspace: 3D Canvas + Control Panels
+         ==================================================================== -->
+    <main class="main-workspace">
+      
+      <!-- 3D Interactive WebGL Canvas -->
+      <div class="canvas-container">
+        <canvas id="three-canvas"></canvas>
+      </div>
+
+      <!-- 3D HUD Floating Badges Overlay -->
+      <div class="hud-layer">
+        <div class="hud-top-center">
+          <div class="learning-path-badge">
+            <span>Learning Pathway:</span>
+            <strong id="hud-topic-label">Linear Regression</strong>
+          </div>
+          <div class="hud-state-indicator">
+            <div class="pulse-dot"></div>
+            <span>AI Knowledge Engine Active</span>
+          </div>
+        </div>
+
+        <div class="viewport-hint-pill">
+          <div class="hint-item"><span class="hint-icon">🖱️</span> Drag to rotate 3D view</div>
+          <div class="hint-item"><span class="hint-icon">🔍</span> Scroll to zoom</div>
+          <div class="hint-item"><span class="hint-icon">✨</span> Click 3D Orbs to select</div>
+        </div>
+      </div>
+
+      <!-- Left Panel: Learning Controls & Adaptive Profile -->
+      <aside class="left-panel">
+        
+        <!-- Subject Selection -->
+        <div class="glass-card">
+          <div class="card-title">
+            <span><span class="title-icon">📖</span> Academic Subject</span>
+          </div>
+          <select class="custom-select" id="subject-selector">
+            <option value="Mathematics & Statistics" selected>Mathematics & Statistics</option>
+            <option value="Computer Science">Computer Science & AI</option>
+            <option value="Physics & Engineering">Physics & Engineering</option>
+            <option value="Chemistry & Biology">Chemistry & Biology</option>
+            <option value="Humanities & Social Sciences">Humanities & Social Sciences</option>
+          </select>
+        </div>
+
+        <!-- Learning Mode Selector -->
+        <div class="glass-card">
+          <div class="card-title">
+            <span><span class="title-icon">🎯</span> Learning Mode</span>
+          </div>
+          <div class="modes-grid">
+            <button class="mode-btn active" data-mode="Study Mode">
+              <span class="mode-icon">📚</span>
+              <span class="mode-name">Study</span>
+              <span class="mode-desc">Step-by-step tutoring</span>
+            </button>
+            <button class="mode-btn" data-mode="Explain Mode">
+              <span class="mode-icon">💡</span>
+              <span class="mode-name">Explain</span>
+              <span class="mode-desc">Analogy → Deep dive</span>
+            </button>
+            <button class="mode-btn" data-mode="Quiz Mode">
+              <span class="mode-icon">🧩</span>
+              <span class="mode-name">Quiz</span>
+              <span class="mode-desc">Interactive MCQ testing</span>
+            </button>
+            <button class="mode-btn" data-mode="Exam Mode">
+              <span class="mode-icon">📝</span>
+              <span class="mode-name">Exam</span>
+              <span class="mode-desc">High-yield revision</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Adaptive Difficulty Selector -->
+        <div class="glass-card difficulty-selector">
+          <div class="card-title">
+            <span><span class="title-icon">⚡</span> Difficulty Tier</span>
+          </div>
+          <div class="difficulty-tiers">
+            <button class="diff-tier-btn" data-tier="Beginner">Beginner</button>
+            <button class="diff-tier-btn active" data-tier="Intermediate">Intermed</button>
+            <button class="diff-tier-btn" data-tier="Advanced">Advanced</button>
+            <button class="diff-tier-btn" data-tier="Exam-Focused">Exam</button>
+          </div>
+          <div class="difficulty-description-box" id="diff-desc-box">
+            <span>Intermediate: Standard college curriculum, balanced intuition and rigor.</span>
+          </div>
+        </div>
+
+        <!-- Topic Pills -->
+        <div class="glass-card">
+          <div class="card-title">
+            <span><span class="title-icon">🌐</span> Knowledge Graph Topics</span>
+          </div>
+          <div class="topic-pills-container">
+            <button class="topic-pill active" data-prompt="Teach me Linear Regression">Linear Regression</button>
+            <button class="topic-pill" data-prompt="Explain Calculus fundamentals">Calculus</button>
+            <button class="topic-pill" data-prompt="What are the basics of Probability?">Probability</button>
+            <button class="topic-pill" data-prompt="Teach me Statistics distributions">Statistics</button>
+            <button class="topic-pill" data-prompt="Explain Machine Learning basics">Machine Learning</button>
+          </div>
+        </div>
+
+        <!-- Adaptive Learning Intelligence Profile -->
+        <div class="glass-card">
+          <div class="card-title">
+            <span><span class="title-icon">🧠</span> Learning Profile</span>
+          </div>
+          
+          <div class="mastery-item">
+            <div class="mastery-header">
+              <span class="mastery-label">Strong: Math Foundations</span>
+              <span class="mastery-val">90%</span>
+            </div>
+            <div class="mastery-bar-bg">
+              <div class="mastery-bar-fill strong" id="mastery-strong-bar" style="width: 90%;"></div>
+            </div>
+          </div>
+
+          <div class="mastery-item">
+            <div class="mastery-header">
+              <span class="mastery-label">Improving: Probability</span>
+              <span class="mastery-val">65%</span>
+            </div>
+            <div class="mastery-bar-bg">
+              <div class="mastery-bar-fill improving" id="mastery-improving-bar" style="width: 65%;"></div>
+            </div>
+          </div>
+
+          <div class="mastery-item">
+            <div class="mastery-header">
+              <span class="mastery-label">Needs Review: Statistics</span>
+              <span class="mastery-val">42%</span>
+            </div>
+            <div class="mastery-bar-bg">
+              <div class="mastery-bar-fill review" id="mastery-review-bar" style="width: 42%;"></div>
+            </div>
+          </div>
+
+          <div class="recommendations-list">
+            <button class="recommendation-btn" data-prompt="Let's practice a 3-question quiz on Probability.">
+              <span class="rec-arrow">→</span> Practice probability quiz
+            </button>
+            <button class="recommendation-btn" data-prompt="Review regression assumptions and pitfalls.">
+              <span class="rec-arrow">→</span> Review regression assumptions
+            </button>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- Right Panel: AI Tutor Conversation & Quiz Stream -->
+      <section class="right-panel">
+        <div class="chat-panel-container">
+          
+          <!-- Chat Header -->
+          <div class="chat-header">
+            <div class="chat-header-tutor">
+              <div class="tutor-avatar">🤖</div>
+              <div class="tutor-info">
+                <span class="tutor-name">StudyBuddy AI</span>
+                <span class="tutor-status">Online · Adaptive Tutor</span>
+              </div>
+            </div>
+            <div class="chat-actions">
+              <button class="btn-chat-action" id="btn-clear-chat" title="Clear Chat History">Clear</button>
+            </div>
+          </div>
+
+          <!-- Messages Scrollable Stream -->
+          <div class="chat-messages-stream" id="chat-messages-stream">
+            
+            <!-- Landing / Empty State -->
+            <div class="empty-state-container">
+              <div class="empty-state-icon">💡</div>
+              <div class="empty-state-title">What would you like to learn?</div>
+              <div class="empty-state-subtitle">
+                StudyBuddy adapts to your academic level with step-by-step tutoring, interactive quizzes, and visual concepts.
+              </div>
+
+              <div class="empty-state-prompts">
+                <button class="prompt-suggestion-card" data-prompt="Explain linear regression with a real-world example.">
+                  <span>📈</span> Explain a Concept
+                </button>
+                <button class="prompt-suggestion-card" data-prompt="Start an interactive quiz on linear regression.">
+                  <span>🧩</span> Start a Quiz
+                </button>
+                <button class="prompt-suggestion-card" data-prompt="Prepare high-yield exam revision notes for Calculus.">
+                  <span>📝</span> Prepare for Exam
+                </button>
+                <button class="prompt-suggestion-card" data-prompt="Review my weak areas in probability and statistics.">
+                  <span>🔍</span> Review Weak Areas
+                </button>
+              </div>
+
+              <div class="suggested-topics-list">
+                <button class="topic-pill" data-prompt="Explain Linear Regression">• Linear Regression</button>
+                <button class="topic-pill" data-prompt="Explain Photosynthesis">• Photosynthesis</button>
+                <button class="topic-pill" data-prompt="Explain QuickSort algorithm">• QuickSort</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Chat Input Area -->
+          <div class="chat-input-area">
+            <div class="chat-input-container">
+              <textarea 
+                id="chat-input-field" 
+                rows="1" 
+                placeholder="Ask a learning question, or practice a concept..."
+                aria-label="Ask a question"
+              ></textarea>
+              <button class="btn-send" id="btn-send-message" title="Send Message" aria-label="Send">
+                ➤
+              </button>
+            </div>
+            <div class="input-footer-chips">
+              <span>Press <kbd style="background: rgba(255,255,255,0.1); padding: 1px 4px; border-radius: 3px;">Enter</kbd> to send</span>
+              <span>SDG 4 Education Safe AI</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Mobile Drawer Bottom Navigation Bar -->
+    <nav class="mobile-nav-bar">
+      <button class="mobile-nav-btn" id="mob-nav-controls">
+        <span class="mobile-nav-icon">⚙️</span>
+        <span>Controls</span>
+      </button>
+      <button class="mobile-nav-btn active" id="mob-nav-3d">
+        <span class="mobile-nav-icon">🪐</span>
+        <span>3D Space</span>
+      </button>
+      <button class="mobile-nav-btn" id="mob-nav-chat">
+        <span class="mobile-nav-icon">💬</span>
+        <span>AI Tutor</span>
+      </button>
+    </nav>
+
+    <!-- Floating Level Adaptation Notification Toast -->
+    <div class="adaptation-toast" id="adaptation-toast"></div>
+
+  </div>
+
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- Main Application Entry Module -->
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>

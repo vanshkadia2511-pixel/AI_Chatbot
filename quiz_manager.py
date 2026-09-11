@@ -65,45 +65,110 @@ def clean_json_response(raw_text: str) -> Dict[str, Any]:
     except Exception as e:
         raise ValueError(f"Failed to parse quiz question JSON: {str(e)}\nRaw response: {raw_text[:200]}")
 
+DEMO_QUIZ_POOL = [
+    {
+        "question": "In supervised machine learning, what is the primary goal of Linear Regression?",
+        "options": {
+            "A": "To classify data points into discrete categories",
+            "B": "To find a linear relationship that predicts continuous continuous numerical output values",
+            "C": "To group unlabelled data into clusters",
+            "D": "To reduce dimensional feature space using principal components"
+        },
+        "correct_option": "B",
+        "explanation": "Linear Regression models the relationship between independent feature(s) and a continuous target variable by fitting an optimal line of best fit.",
+        "hint": "Think about predicting continuous numbers like prices or test scores."
+    },
+    {
+        "question": "Which time complexity represents the average performance of QuickSort algorithm?",
+        "options": {
+            "A": "O(n)",
+            "B": "O(n log n)",
+            "C": "O(n²)",
+            "D": "O(log n)"
+        },
+        "correct_option": "B",
+        "explanation": "QuickSort uses divide-and-conquer to partition arrays. Its average and best-case time complexity is O(n log n), though worst-case is O(n²) when bad pivots are chosen.",
+        "hint": "Divide and conquer algorithms typically have logarithmic height trees."
+    },
+    {
+        "question": "What does the first law of thermodynamics state?",
+        "options": {
+            "A": "Entropy of an isolated system always increases",
+            "B": "Energy cannot be created or destroyed, only transformed from one form to another",
+            "C": "Absolute zero temperature can never be reached",
+            "D": "Force equals mass times acceleration"
+        },
+        "correct_option": "B",
+        "explanation": "The First Law of Thermodynamics is the Law of Conservation of Energy, stating that total energy in a closed system remains constant.",
+        "hint": "Energy conservation principle."
+    },
+    {
+        "question": "In Python, which data structure is mutable and maintains insertion order (Python 3.7+)?",
+        "options": {
+            "A": "Tuple",
+            "B": "Set",
+            "C": "List",
+            "D": "String"
+        },
+        "correct_option": "C",
+        "explanation": "Lists in Python are ordered, mutable sequences that allow duplicate elements and support dynamic resizing.",
+        "hint": "Created using square brackets []."
+    }
+]
+
 def fetch_next_question(gemini_manager: GeminiManager) -> Optional[Dict[str, Any]]:
-    """Generates the next quiz question using Gemini API."""
+    """Generates the next quiz question using Gemini API or Demo Pool."""
     state = st.session_state.quiz_state
     
-    prompt = get_quiz_generation_prompt(
-        subject=state["subject"],
-        topic=state["topic"],
-        difficulty=state["difficulty"],
-    )
-    system_inst = get_system_instruction(
-        mode="Quiz Mode",
-        subject=state["subject"],
-        topic=state["topic"],
-        difficulty=state["difficulty"],
-    )
-
-    try:
-        raw_response = gemini_manager.generate_single_response(
-            prompt=prompt,
-            system_instruction=system_inst,
-            temperature=0.4,
+    if gemini_manager.is_configured():
+        prompt = get_quiz_generation_prompt(
+            subject=state["subject"],
+            topic=state["topic"],
+            difficulty=state["difficulty"],
         )
-        q_data = clean_json_response(raw_response)
-        
-        # Validate expected keys
-        required_keys = ["question", "options", "correct_option", "explanation"]
-        for key in required_keys:
-            if key not in q_data:
-                raise ValueError(f"Missing required key '{key}' in quiz output.")
-        
-        state["current_question"] = q_data
-        state["question_number"] += 1
-        state["user_answer"] = None
-        state["answered"] = False
-        state["error_msg"] = None
-        return q_data
-    except Exception as err:
-        state["error_msg"] = f"Unable to generate quiz question: {str(err)}"
-        return None
+        system_inst = get_system_instruction(
+            mode="Quiz Mode",
+            subject=state["subject"],
+            topic=state["topic"],
+            difficulty=state["difficulty"],
+        )
+
+        try:
+            raw_response = gemini_manager.generate_single_response(
+                prompt=prompt,
+                system_instruction=system_inst,
+                temperature=0.4,
+                mode="Quiz Mode",
+                subject=state["subject"],
+                topic=state["topic"],
+                difficulty=state["difficulty"],
+            )
+            q_data = clean_json_response(raw_response)
+            
+            required_keys = ["question", "options", "correct_option", "explanation"]
+            for key in required_keys:
+                if key not in q_data:
+                    raise ValueError(f"Missing key '{key}'")
+            
+            state["current_question"] = q_data
+            state["question_number"] += 1
+            state["user_answer"] = None
+            state["answered"] = False
+            state["error_msg"] = None
+            return q_data
+        except Exception:
+            pass
+
+    # Demo Fallback
+    idx = (state["question_number"]) % len(DEMO_QUIZ_POOL)
+    q_data = DEMO_QUIZ_POOL[idx]
+    state["current_question"] = q_data
+    state["question_number"] += 1
+    state["user_answer"] = None
+    state["answered"] = False
+    state["error_msg"] = None
+    return q_data
+
 
 def submit_answer(selected_option: str):
     """Processes the student's selected answer and updates score."""

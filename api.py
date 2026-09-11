@@ -91,6 +91,7 @@ def _get_gemini_manager() -> GeminiManager:
 # Health Check
 # ---------------------------------------------------------------------------
 @app.get("/", tags=["Health"])
+@app.get("/health", tags=["Health"])
 async def health_check():
     """Basic health check endpoint."""
     return {
