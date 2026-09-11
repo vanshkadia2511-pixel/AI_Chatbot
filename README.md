@@ -893,4 +893,5 @@ Set `GEMINI_API_KEY` as an environment variable on your chosen platform.
 
 *StudyBuddy — Built for SDG 4: Quality Education. Powered by Google Gemini.*
 #   A I _ C h a t b o t  
+ #   A I _ C h a t b o t  
  
